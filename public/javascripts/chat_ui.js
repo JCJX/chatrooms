@@ -22,3 +22,30 @@ function processUserInput(chatApp, socket){
   }
   $('#send-message').val('');
 }
+
+var socket = io.connect();
+$(document).ready(function(){
+  var chatApp = new Chat(socket);
+
+  socket.on('nnameResult',function(result){
+    var message;
+    if(result.success){
+      message = 'you are now known as '+result.name+'.';
+    }else{
+      message = result.message;
+    }
+    $('#messages').append(divSystemContentElement(message));
+  });
+
+  socket.on('joinResult',function(result){
+    $('#room').text(result.room);
+    $('#messages').append(divSystemContentElement('Room changed.'));
+  });
+  socket.on('message',function(message){
+    var newElement = $('<div></div>').text(message.text);
+    $('#messages').append(newElement);
+  });
+  socket.on('room',function(room){
+    $('#room-list').empty();
+  })
+})
