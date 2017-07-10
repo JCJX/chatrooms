@@ -47,5 +47,16 @@ $(document).ready(function(){
   });
   socket.on('room',function(room){
     $('#room-list').empty();
-  })
+    for(var room in rooms){
+      room = room.substring(1,room.length);
+      if(room !=''){
+        $('#room-list').append(divEscapedContentElement(room));
+      }
+    }
+    $('#room-list div').click(function(){
+      chatApp.processCommand('/join' + $(this).text());
+      $('#send-message').focus();
+    });
+  });
+  
 })
